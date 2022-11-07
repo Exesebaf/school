@@ -16,13 +16,12 @@ public class FacultyService {
     private Long idFaculty = 0L;
 
 
-
-
     public Faculty createFaculty(Faculty faculty) {
         faculty.setId(idFaculty++);
         facultyMap.put(faculty.getId(), faculty);
         return faculty;
     }
+
     public Faculty findFaculty(Long id) {
         if (!facultyMap.containsKey(id)) {
             throw new FacultyNotFoundException(id);
@@ -30,16 +29,18 @@ public class FacultyService {
         return facultyMap.get(id);
     }
 
-    public Faculty editFaculty(Faculty fasulty) {
-        if (!facultyMap.containsKey(fasulty.getId())) {
-            throw new FacultyNotFoundException(fasulty.getId());
+    public Faculty editFaculty(Long id,
+                               Faculty faculty) {
+        if (!facultyMap.containsKey(id)) {
+            throw new FacultyNotFoundException(id);
         }
-        Faculty oldFasulty = facultyMap.get(fasulty.getId());
-        oldFasulty.setName(fasulty.getName());
-        oldFasulty.setColor(fasulty.getColor());
-        facultyMap.replace(fasulty.getId(),oldFasulty);
+        Faculty oldFasulty = facultyMap.get(id);
+        oldFasulty.setName(faculty.getName());
+        oldFasulty.setColor(faculty.getColor());
+        facultyMap.replace(id, oldFasulty);
         return oldFasulty;
     }
+
     public Faculty deleteFaculty(Long id) {
         if (!facultyMap.containsKey(id)) {
             throw new FacultyNotFoundException(id);

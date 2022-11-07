@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlerStudentNonFoundException(StudentNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Студент с id =" + e.getid() + " не найдет");
     }
+
     @ExceptionHandler(FacultyNotFoundException.class)
     public ResponseEntity<String> handlerFacultyNotFoundException(FacultyNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Факультет с id =" + e.getid() + " не найдет");

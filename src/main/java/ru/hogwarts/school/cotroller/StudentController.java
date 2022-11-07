@@ -8,7 +8,6 @@ import ru.hogwarts.school.mobel.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("students")
@@ -32,8 +31,8 @@ public class StudentController {
 
     @PutMapping("{id}")
     public Student editStudent(@PathVariable long id,
-            @RequestBody Student student) {
-        return studentService.editStudent(id,student);
+                               @RequestBody Student student) {
+        return studentService.editStudent(id, student);
     }
 
     @DeleteMapping("{id}")

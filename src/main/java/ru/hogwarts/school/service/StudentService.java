@@ -39,9 +39,10 @@ public class StudentService {
         Student oldStudent = studentMap.get(id);
         oldStudent.setAge(student.getAge());
         oldStudent.setName(student.getName());
-        studentMap.replace(id,oldStudent);
+        studentMap.replace(id, oldStudent);
         return oldStudent;
     }
+
     public Student deleteStudent(Long id) {
         if (!studentMap.containsKey(id)) {
             throw new StudentNotFoundException(id);
