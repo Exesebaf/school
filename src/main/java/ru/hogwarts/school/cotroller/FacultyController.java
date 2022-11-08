@@ -1,12 +1,12 @@
 package ru.hogwarts.school.cotroller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.mobel.Faculty;
 
+import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.service.FacultyService;
 
+
+import javax.validation.Valid;
 import java.util.Collection;
 
 
@@ -20,30 +20,29 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        Faculty created = facultyService.createFaculty(faculty);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public FacultyRecord createFaculty(@RequestBody @Valid FacultyRecord facultyRecord) {
+        return facultyService.createFaculty(facultyRecord);
     }
 
     @GetMapping("{id}")
-    public Faculty getFacultyId(@PathVariable Long id) {
+    public FacultyRecord getFacultyId(@PathVariable Long id) {
         return facultyService.findFaculty(id);
     }
 
 
     @PutMapping("{id}")
-    public Faculty editFaculty(@PathVariable long id,
-                               @RequestBody Faculty faculty) {
-        return facultyService.editFaculty(id, faculty);
+    public FacultyRecord editFaculty(@PathVariable long id,
+                                     @RequestBody @Valid FacultyRecord facultyRecord) {
+        return facultyService.editFaculty(id, facultyRecord);
     }
 
     @DeleteMapping("{id}")
-    public Faculty deleteFaculty(@PathVariable long id) {
+    public FacultyRecord deleteFaculty(@PathVariable long id) {
         return facultyService.deleteFaculty(id);
     }
 
     @GetMapping
-    public Collection<Faculty> findColorFaculty(@RequestParam String color) {
+    public Collection<FacultyRecord> findColorFaculty(@RequestParam String color) {
         return facultyService.findColorFaculty(color);
     }
 }

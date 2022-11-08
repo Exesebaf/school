@@ -3,57 +3,55 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 
 
-import ru.hogwarts.school.exseption.StudentNotFoundException;
-import ru.hogwarts.school.mobel.Student;
+import ru.hogwarts.school.component.RecordMapper;
+import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.entity.Student;
+import ru.hogwarts.school.record.StudentRecord;
+import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.stream.Collectors;
 
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> studentMap = new HashMap<>();
 
-    private Long idStudents = 0L;
+    private final StudentRepository studentRepository;
 
-    public Student createStudent(Student student) {
-        student.setId(++idStudents);
-        studentMap.put(idStudents, student);
-        return student;
+    private final RecordMapper recordMapper;
+
+    public StudentService(StudentRepository studentRepository, RecordMapper recordMapper) {
+        this.studentRepository = studentRepository;
+        this.recordMapper = recordMapper;
     }
 
-    public Student findStudent(Long id) {
-        if (!studentMap.containsKey(id)) {
-            throw new StudentNotFoundException(id);
-        }
-        return studentMap.get(id);
+    public StudentRecord createStudent(StudentRecord studentRecord) {
+        return recordMapper.toRecord(studentRepository.save(recordMapper.toEntity(studentRecord)));
     }
 
-    public Student editStudent(long id,
-                               Student student) {
-        if (!studentMap.containsKey(id)) {
-            throw new StudentNotFoundException(id);
-        }
-        Student oldStudent = studentMap.get(id);
-        oldStudent.setAge(student.getAge());
-        oldStudent.setName(student.getName());
-        studentMap.replace(id, oldStudent);
-        return oldStudent;
+    public StudentRecord findStudent(Long id) {
+        return recordMapper.toRecord(studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
     }
 
-    public Student deleteStudent(Long id) {
-        if (!studentMap.containsKey(id)) {
-            throw new StudentNotFoundException(id);
-        }
-        return studentMap.remove(id);
+    public StudentRecord editStudent(long id,
+                                     StudentRecord studentRecord) {
+        Student oldStudent = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        oldStudent.setAge(studentRecord.getAge());
+        oldStudent.setName(studentRecord.getName());
+        return recordMapper.toRecord(studentRepository.save(oldStudent));
+    }
+
+    public StudentRecord deleteStudent(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        studentRepository.delete(student);
+        return recordMapper.toRecord(student);
     }
 
 
-    public Collection<Student> findAgeStudent(int age) {
-        return studentMap.values().stream()
-                .filter(student -> student.getAge() == age)
+    public Collection<StudentRecord> findAgeStudent(int age) {
+        return studentRepository.findAllByAge(age).stream()
+                .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
 }

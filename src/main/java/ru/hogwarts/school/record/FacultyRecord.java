@@ -1,17 +1,15 @@
-package ru.hogwarts.school.mobel;
+package ru.hogwarts.school.record;
 
-import java.util.Objects;
 
-public class Faculty {
+import javax.validation.constraints.NotBlank;
+
+public class FacultyRecord {
     private Long id;
-    private String name;
-    private String color;
 
-    public Faculty(Long id, String name, String color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-    }
+    @NotBlank(message = "Название факультета должно быть заполнено!")
+    private String name;
+    @NotBlank(message = "Цвет факультета должен быть заполнен!")
+    private String color;
 
     public Long getId() {
         return id;
@@ -36,5 +34,4 @@ public class Faculty {
     public void setColor(String color) {
         this.color = color;
     }
-
 }
