@@ -2,6 +2,7 @@ package ru.hogwarts.school.entity;
 
 import javax.persistence.*;
 
+
 @Entity
 public class Student {
     @Id
@@ -10,6 +11,10 @@ public class Student {
 
     private String name;
     private int age;
+
+
+    @ManyToOne
+    private Faculty faculty;
 
 
     public Long getId() {
@@ -36,4 +41,11 @@ public class Student {
         this.age = age;
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 }

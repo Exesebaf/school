@@ -3,6 +3,7 @@ package ru.hogwarts.school.cotroller;
 import org.springframework.web.bind.annotation.*;
 
 import ru.hogwarts.school.record.FacultyRecord;
+import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.service.FacultyService;
 
 
@@ -11,7 +12,7 @@ import java.util.Collection;
 
 
 @RestController
-@RequestMapping("faculties")
+@RequestMapping("/faculties")
 public class FacultyController {
     private final FacultyService facultyService;
 
@@ -24,26 +25,36 @@ public class FacultyController {
         return facultyService.createFaculty(facultyRecord);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public FacultyRecord getFacultyId(@PathVariable Long id) {
         return facultyService.findFaculty(id);
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public FacultyRecord editFaculty(@PathVariable long id,
                                      @RequestBody @Valid FacultyRecord facultyRecord) {
         return facultyService.editFaculty(id, facultyRecord);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public FacultyRecord deleteFaculty(@PathVariable long id) {
         return facultyService.deleteFaculty(id);
     }
 
-    @GetMapping
+    @GetMapping(params = "!colorOrName")
     public Collection<FacultyRecord> findColorFaculty(@RequestParam String color) {
         return facultyService.findColorFaculty(color);
+    }
+
+    @GetMapping(params = "colorOrName")
+    public Collection<FacultyRecord> findByNameOrColor(@RequestParam String colorOrName) {
+        return facultyService.findByNameOrColor(colorOrName);
+    }
+
+    @GetMapping("/{id}/students")
+    public Collection<StudentRecord> findStudentsByFaculty(@PathVariable long id) {
+        return facultyService.findStudentsByFaculty(id);
     }
 }
 
