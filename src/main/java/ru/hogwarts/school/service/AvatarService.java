@@ -15,11 +15,15 @@ import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
-import java.io.IOException;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.Optional;
+
+
 
 
 @Service
@@ -41,7 +45,7 @@ public class AvatarService {
         this.recordMapper = recordMapper;
     }
 
-    public AvatarRecord create(MultipartFile multipartFile, Long studentId) throws IOException {
+    public AvatarRecord create(MultipartFile multipartFile, long studentId) throws IOException {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
         byte[] data = multipartFile.getBytes();
         String extension = Optional.ofNullable(multipartFile.getOriginalFilename())
@@ -64,7 +68,7 @@ public class AvatarService {
         return Pair.of(Files.readAllBytes(Paths.get(avatar.getFilePath())), avatar.getMediaType());
     }
 
-    public Pair<byte[], String> readFromDb(long id) {
+    public Pair<byte[], String> readFromDb(long id) throws IOException{
         Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new AvatarNotFoundException(id));
         return Pair.of(avatar.getData(), avatar.getMediaType());
     }

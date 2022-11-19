@@ -1,6 +1,7 @@
 package ru.hogwarts.school.cotroller;
 
 
+
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,31 +23,27 @@ public class AvatarController {
         this.avatarService = avatarService;
     }
 
-
-    @PostMapping
-    public AvatarRecord create(@RequestParam MultipartFile avatar,
-                               @RequestParam long studentId) throws IOException {
+    @PostMapping(value = "/{studentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public AvatarRecord create(@RequestParam long studentId,
+                                     @RequestParam MultipartFile avatar) throws IOException {
         return avatarService.create(avatar, studentId);
     }
-
-
     @GetMapping("/{id}/from-fs")
     public ResponseEntity<byte[]> readFromFs(@PathVariable long id) throws IOException {
-        Pair<byte[], String> pair = avatarService.readFromFs(id);
-        return read(pair);
-    }
-
-    @GetMapping("/{id}/from-db")
-    public ResponseEntity<byte[]> readFromDb(@PathVariable long id) {
-        Pair<byte[], String> pair = avatarService.readFromDb(id);
-        return read(pair);
-    }
-
-    public ResponseEntity<byte[]> read(Pair<byte[], String> pair) {
-        return ResponseEntity.ok()
-                .contentLength(pair.getFirst().length)
+        Pair<byte[],String> pair = avatarService.readFromFs(id);
+        return ResponseEntity.ok().contentLength(pair.getFirst().length)
                 .contentType(MediaType.parseMediaType(pair.getSecond()))
                 .body(pair.getFirst());
     }
+    @GetMapping("/{id}/from-db")
+    public ResponseEntity<byte[]> readFromDb(@PathVariable long id) throws IOException {
+        Pair<byte[],String> pair = avatarService.readFromDb(id);
+        return ResponseEntity.ok().contentLength(pair.getFirst().length)
+                .contentType(MediaType.parseMediaType(pair.getSecond()))
+                .body(pair.getFirst());
+    }
+
+
+
 
 }
