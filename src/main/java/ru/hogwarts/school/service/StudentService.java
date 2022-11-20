@@ -71,13 +71,6 @@ public class StudentService {
     }
 
 
-    public Collection<StudentRecord> findAgeStudent(int age) {
-        return studentRepository.findAllByAge(age).stream()
-                .map(recordMapper::toRecord)
-                .collect(Collectors.toList());
-    }
-
-
     public Collection<StudentRecord> findAllByAgeBetween(int min, int max) {
         return studentRepository.findAllByAgeBetween(min, max).stream()
                 .map(recordMapper::toRecord)
