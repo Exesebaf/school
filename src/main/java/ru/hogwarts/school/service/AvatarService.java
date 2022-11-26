@@ -76,7 +76,7 @@ public class AvatarService {
 
 
     public List<AvatarRecord> findByPagination(int page, int size) {
-        return avatarRepository.findAll(PageRequest.of(page, size)).get()
+        return  avatarRepository.findAll(PageRequest.of(page, size)).get()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
 
