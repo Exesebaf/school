@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.service.AvatarService;
+
 
 import javax.validation.constraints.Min;
 import java.io.IOException;
@@ -51,8 +53,5 @@ public class AvatarController {
                                                @RequestParam @Min(0) int size) {
         return avatarService.findByPagination(page, size);
     }
-
-
-
-
 }
+
