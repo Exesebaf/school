@@ -15,6 +15,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,4 +83,17 @@ public class StudentService {
     }
 
 
+    public int totalCountStudents() {
+        return studentRepository.totalCountOfStudents();
+    }
+
+    public double averageAgeOfStudents() {
+        return studentRepository.averageAgeOfStudents();
+    }
+
+    public List<StudentRecord> lastStudents(int count) {
+        return studentRepository.lastStudents(count).stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
 }

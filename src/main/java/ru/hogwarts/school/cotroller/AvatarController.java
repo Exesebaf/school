@@ -5,16 +5,20 @@ package ru.hogwarts.school.cotroller;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.service.AvatarService;
 
+import javax.validation.constraints.Min;
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/avatars")
+@Validated
 public class AvatarController {
 
     private final AvatarService avatarService;
@@ -41,6 +45,11 @@ public class AvatarController {
         return ResponseEntity.ok().contentLength(pair.getFirst().length)
                 .contentType(MediaType.parseMediaType(pair.getSecond()))
                 .body(pair.getFirst());
+    }
+    @GetMapping
+    public List<AvatarRecord> findByPagination(@RequestParam @Min(0) int page ,
+                                               @RequestParam @Min(0) int size) {
+        return avatarService.findByPagination(page, size);
     }
 
 
