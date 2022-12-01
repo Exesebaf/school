@@ -1,5 +1,9 @@
 package ru.hogwarts.school.service;
 
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
@@ -29,6 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AvatarService {
+    private static final Logger LOG = LoggerFactory.getLogger(AvatarService.class);
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
 
@@ -47,7 +52,9 @@ public class AvatarService {
     }
 
     public AvatarRecord create(MultipartFile multipartFile, long studentId) throws IOException {
+        LOG.debug("Method create Avatar was invoked");
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
+        LOG.error("Avatar with studentId {} not found",studentId);
         byte[] data = multipartFile.getBytes();
         String extension = Optional.ofNullable(multipartFile.getOriginalFilename())
                 .map(fileName -> fileName.substring(multipartFile.getOriginalFilename().lastIndexOf('.')))
@@ -65,17 +72,22 @@ public class AvatarService {
 
 
     public Pair<byte[], String> readFromFs(long id) throws IOException {
+        LOG.debug("Method readFromFs Avatar was invoked");
         Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new AvatarNotFoundException(id));
+        LOG.error("Avatar with id {} not found",id);
         return Pair.of(Files.readAllBytes(Paths.get(avatar.getFilePath())), avatar.getMediaType());
     }
 
     public Pair<byte[], String> readFromDb(long id) throws IOException {
+        LOG.debug("Method readFromDb Avatar was invoked");
         Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new AvatarNotFoundException(id));
+        LOG.error("Avatar with id {} not found",id);
         return Pair.of(avatar.getData(), avatar.getMediaType());
     }
 
 
     public List<AvatarRecord> findByPagination(int page, int size) {
+        LOG.debug("Method findByPagination Avatar was invoked");
         return  avatarRepository.findAll(PageRequest.of(page, size)).get()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
