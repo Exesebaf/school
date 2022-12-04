@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -53,7 +54,7 @@ public class StudentService {
 
     public StudentRecord findStudent(Long id) {
         LOG.debug("Method findStudent  was invoked");
-        return recordMapper.toRecord(studentRepository.findById(id).orElseThrow(() ->{
+        return recordMapper.toRecord(studentRepository.findById(id).orElseThrow(() -> {
             LOG.debug("Student with id {} not found", id);
             return new StudentNotFoundException(id);
         }));
@@ -62,7 +63,7 @@ public class StudentService {
     public StudentRecord editStudent(long id,
                                      StudentRecord studentRecord) {
         LOG.debug("Method editStudent  was invoked");
-        Student oldStudent = studentRepository.findById(id).orElseThrow(() ->{
+        Student oldStudent = studentRepository.findById(id).orElseThrow(() -> {
             LOG.debug("Student with id {} not found", id);
             return new StudentNotFoundException(id);
         });
@@ -116,5 +117,22 @@ public class StudentService {
         return studentRepository.lastStudents(count).stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
+    }
+
+    public Stream<String> findStudentNameWitchA() {
+        LOG.debug("Method lastStudents  was invoked");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("A"))
+                .sorted();
+    }
+
+    public double findStudentAverageAge() {
+        LOG.debug("Method lastStudents  was invoked");
+        return studentRepository.findAll().stream()
+                .mapToDouble(Student::getAge)
+                .average()
+                .orElseThrow(null);
     }
 }

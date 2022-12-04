@@ -11,7 +11,10 @@ import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
 
 @Service
 public class FacultyService {
@@ -20,6 +23,7 @@ public class FacultyService {
     private final FacultyRepository facultyRepository;
 
     private final RecordMapper recordMapper;
+
 
     public FacultyService(FacultyRepository facultyRepository, RecordMapper recordMapper) {
         this.facultyRepository = facultyRepository;
@@ -42,7 +46,7 @@ public class FacultyService {
     public FacultyRecord editFaculty(Long id,
                                      FacultyRecord facultyRecord) {
         LOG.debug("Method editFaculty  was invoked");
-        Faculty oldFaculty = (facultyRepository.findById(id).orElseThrow(() ->{
+        Faculty oldFaculty = (facultyRepository.findById(id).orElseThrow(() -> {
             LOG.error("Faculty with id {} not found", id);
             return new FacultyNotFoundException(id);
         }));
@@ -53,7 +57,7 @@ public class FacultyService {
 
     public FacultyRecord deleteFaculty(Long id) {
         LOG.debug("Method deleteFaculty was invoked");
-        Faculty faculty = (facultyRepository.findById(id).orElseThrow(() ->{
+        Faculty faculty = (facultyRepository.findById(id).orElseThrow(() -> {
             LOG.error("Faculty with id {} not found", id);
             return new FacultyNotFoundException(id);
         }));
@@ -82,24 +86,30 @@ public class FacultyService {
                 .map(Faculty::getStudents)
                 .map(students ->
                         students.stream()
-                        .map(recordMapper::toRecord)
+                                .map(recordMapper::toRecord)
                                 .collect(Collectors.toList()))
-                .orElseThrow(() ->{LOG.error("Faculty with id {} not found", id);
-                return new FacultyNotFoundException(id);
+                .orElseThrow(() -> {
+                    LOG.error("Faculty with id {} not found", id);
+                    return new FacultyNotFoundException(id);
                 });
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
+    public String findTheLongestFacultyName() {
+        LOG.debug("Method findStudentsByFaculty was invoked");
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("Факультеты не найдены");
+
+    }
+
+    public long testParallelStream() {
+        long time = System.currentTimeMillis();
+        long sum = LongStream.rangeClosed(1,100000000)
+                .parallel()
+                .reduce(0L, Long::sum);
+        return System.currentTimeMillis() - time;
+    }
 
 }

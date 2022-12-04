@@ -56,6 +56,16 @@ public class FacultyController {
     public Collection<StudentRecord> findStudentsByFaculty(@PathVariable long id) {
         return facultyService.findStudentsByFaculty(id);
     }
+
+    @GetMapping("/findTheLongersFacultyName")
+    public String findTheLongestFacultyName() {
+        return facultyService.findTheLongestFacultyName();
+    }
+
+    @GetMapping("/sum")
+    public long testParallelStream() {
+      return   facultyService.testParallelStream();
+    }
 }
 
 
