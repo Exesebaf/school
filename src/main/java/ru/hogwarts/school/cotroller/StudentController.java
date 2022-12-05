@@ -1,6 +1,7 @@
 package ru.hogwarts.school.cotroller;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,5 +83,14 @@ public class StudentController {
     @GetMapping("/findStudentAverageAge")
     public double findStudentAverageAge() {
         return studentService.findStudentAverageAge();
+    }
+
+    @GetMapping("/getAllStudentsWithThreads")
+    public void getAllStudentsWithThreads() {
+       studentService.getAllStudentsWithThreads();
+    }
+    @GetMapping("/getAllStudentsWithSynchronizedThreads")
+    public void printStudentsSynchronous() {
+        studentService.getAllStudentsWithSynchronizedThreads();
     }
 }

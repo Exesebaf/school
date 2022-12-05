@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -134,5 +135,27 @@ public class StudentService {
                 .mapToDouble(Student::getAge)
                 .average()
                 .orElseThrow(null);
+    }
+    public void getAllStudentsWithThreads() {
+        List<Student> students =studentRepository.findAll(PageRequest.of(0,6)).getContent();
+        printStudents(students.subList(0,2));
+        new Thread(()->printStudents(students.subList(2,4))).start();
+        new Thread(()->printStudents(students.subList(4,6))).start();
+    }
+    private void printStudents(List<Student> students) {
+        for (Student student : students) {
+            LOG.info(student.getName());
+        }
+    }
+    public void getAllStudentsWithSynchronizedThreads() {
+        List<Student> students =studentRepository.findAll(PageRequest.of(0,6)).getContent();
+        printStudentsSynchronous(students.subList(0,2));
+        new Thread(()->printStudents(students.subList(2,4))).start();
+        new Thread(()->printStudents(students.subList(4,6))).start();
+    }
+    private synchronized void printStudentsSynchronous(List<Student> students) {
+        for (Student student : students) {
+            LOG.info(student.getName());
+        }
     }
 }
